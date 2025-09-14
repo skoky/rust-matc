@@ -14,14 +14,14 @@ use std::{
 };
 use tokio_util::bytes::Buf;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum CommissioningMode {
     No,
     Yes,
     WithPasscode,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct MatterDeviceInfo {
     pub service: String,
     pub device: String,
