@@ -25,6 +25,7 @@ pub enum CommissioningMode {
 pub struct MatterDeviceInfo {
     pub service: String,
     pub device: String,
+    pub device_type: String,
     pub ips: Vec<IpAddr>,
     pub name: Option<String>,
     pub vendor_id: Option<String>,
@@ -63,6 +64,7 @@ fn remove_string_suffix(string: &str, suffix: &str) -> String {
 fn to_matter_info(msg: &DnsMessage, svc: &str) -> Result<MatterDeviceInfo> {
     let mut device = None;
     let mut service = None;
+    let mut device_type = None;
     let mut ips = BTreeMap::new();
     let mut name = None;
     let mut discriminator = None;
@@ -123,6 +125,7 @@ fn to_matter_info(msg: &DnsMessage, svc: &str) -> Result<MatterDeviceInfo> {
                 },
                 None => None,
             };
+            device_type = rec.get("DT").cloned();
         }
     }
 
@@ -133,6 +136,7 @@ fn to_matter_info(msg: &DnsMessage, svc: &str) -> Result<MatterDeviceInfo> {
     Ok(MatterDeviceInfo {
         service: service.context("service name not detected")?,
         device: device.context("device name not detected")?,
+        device_type: device_type.context("device type not detected")?,
         ips: ips.into_keys().collect(),
         name,
         discriminator,
